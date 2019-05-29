@@ -1,0 +1,15 @@
+{
+	"params":
+	{
+		"local_server":"True",
+		"local_uri":"mysql://root:@localhost/branddut",
+		"prod_uri":"mysql://root:@localhost/branddut",
+		"fb_url":"https://www.facebook.com/BrandDut/",
+		"insta_url":"https://www.instagram.com/branddutindia/?hl=en",
+		"tw_url":"",
+		"ln_url":"https://www.linkedin.com/company/ourstories-media-and-entertainment/?viewAsMember=true",
+		"no_of_posts":3,
+		"admin_username":"BrandDutAdmin",
+		"admin_password":"BrandDut@98"
+	}
+}

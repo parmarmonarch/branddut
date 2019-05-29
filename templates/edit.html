@@ -1,0 +1,105 @@
+{% extends "layout.html" %}
+{% block body %}
+
+
+  <!-- Page Header -->
+  <header class="masthead" style="background-image: url('  {{ url_for('static', filename='img/about-bg.jpg') }}  ')">
+    <div class="overlay"></div>
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-8 col-md-10 mx-auto">
+          <div class="page-heading">
+            <h1>Edit Post</h1>
+            <span class="subheading"></span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-md-10 mx-auto">
+        <h1>Basic Actions</h1>
+        
+        <a href="/dashboard"><button class="btn btn-primary">ADMIN PANEL HOME</button></a>
+        <a href="#"><button class="btn btn-primary">LOGOUT</button></a>
+<hr>
+        <h1>Edit Post:</h1><hr>
+        
+        <!-- Contact Form - Enter your email address on line 19 of the mail/contact_me.php file to make this form work. -->
+        <!-- WARNING: Some web hosts do not allow emails to be sent through forms to common mail hosts like Gmail or Yahoo. It's recommended that you use a private domain email address! -->
+        <!-- To use the contact form, your site must be on a live web host with PHP! The form will not work locally! -->
+        <form name="newpost" id="newpost" action="/edit/{{PID}}" method="POST" novalidate>
+          <div class="control-group">
+            <div class="form-group floating-label-form-group controls">
+              <label>Title</label>
+              <input type="text" class="form-control" placeholder="Title" name="title" id="title" required data-validation-required-message="Please enter the title." value="{{post.title}}" >
+              <p class="help-block text-danger"></p>
+            </div>
+          </div>
+          <div class="control-group">
+            <div class="form-group floating-label-form-group controls">
+              <label>Subtitle</label>
+              <input type="text" class="form-control" placeholder="Subtitle" name="subtitle" id="subtitle" required data-validation-required-message="Please enter the subtitle." value="{{post.subtitle}}" >
+              <p class="help-block text-danger"></p>
+            </div>
+          </div>
+          <div class="control-group">
+            <div class="form-group floating-label-form-group controls">
+              <label>Content</label>
+              <textarea rows="5" class="form-control" placeholder="Content" name="content" id="content" required data-validation-required-message="Please enter the content.">{{post.content}}</textarea>
+              <p class="help-block text-danger"></p>
+            </div>
+          </div>
+          <div class="control-group">
+            <div class="form-group col-xs-12 floating-label-form-group controls">
+              <label>slug</label>
+              <input type="text" class="form-control" placeholder="Slug" name="slug" id="slug" required data-validation-required-message="Please enter the new slug." value="{{post.slug}}">
+              <p class="help-block text-danger"></p>
+            </div>
+          </div>
+          <div class="control-group">
+            <div class="form-group col-xs-12 floating-label-form-group controls">
+              <label>image_file</label>
+              <input  class="form-control" placeholder="Image" name="image_file" id="image_file" required data-validation-required-message="Image goes here." value="{{post.image}}">
+              <p class="help-block text-danger"></p>
+            </div>
+          </div>
+          <br>
+          <div id="success"></div>
+          <div class="form-group">
+            
+          <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
+  Submit
+</button>
+           <!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">{{post.title}}</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <h1>Post modified successfully!</h1>
+      </div> 
+      <div class="modal-footer">
+        <button type="submit" class="btn btn-primary" id="sendMessageButton">OK</button>
+      
+      </div>
+    </div>
+  </div>
+</div> 
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <hr>
+
+ {% endblock %}
