@@ -3,6 +3,7 @@ from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
 from werkzeug import secure_filename
 import os
+import math
 import json
 
 with open('config.json','r') as c:
@@ -38,10 +39,29 @@ class Posts(db.Model):
     subtitle = db.Column(db.String(80), nullable=True)
 
 
-@app.route("/index")
+@app.route("/")
 def home():
-    posts = Posts.query.filter_by().all()[0:params['no_of_posts']]
-    return render_template('index.html', params=params, posts=posts)
+    page = request.args.get('page')
+    if(not str(page).isnumeric()):
+        page = 1
+    page=int(page)
+    posts = Posts.query.filter_by().all()
+    last = math.ceil(len(posts)/params['no_of_posts'])
+    posts = posts[(page-1)*params['no_of_posts']:(page-1)*params['no_of_posts']+params['no_of_posts']]
+    #firstpage
+    if page==1:
+        prev = "#"
+        nextpg = "/?page=" + str(page+1)
+    #lastpage
+    elif (page==last):
+        prev = "/?page=" + str(page-1)
+        nextpg = "#"
+    #middlepage
+    else:
+        prev = "/?page=" + str(page-1)
+        nextpg = "/?page=" + str(page+1)
+
+    return render_template('index.html', params=params, posts=posts, prev=prev, nextpg=nextpg)
 
 @app.route("/about")
 def about():
