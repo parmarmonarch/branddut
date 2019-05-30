@@ -1,6 +1,8 @@
 from flask import Flask, render_template, request, session, redirect
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
+from werkzeug import secure_filename
+import os
 import json
 
 with open('config.json','r') as c:
@@ -10,6 +12,7 @@ local_server=params['local_server']
 
 app = Flask(__name__)
 app.secret_key = 'super-secret-key'
+app.config['UPLOAD_FOLDER'] = params['upload_location']
 
 if(local_server):
     app.config['SQLALCHEMY_DATABASE_URI'] = params['local_uri']
@@ -109,6 +112,17 @@ def edit(PID):
                 return redirect('/edit/'+PID)
         post = Posts.query.filter_by(PID=PID).first()
         return render_template('edit.html', params=params,PID=PID, post=post)
+
+
+
+@app.route("/uploader", methods = ['GET','POST'])
+def uploader():
+    if ('user' in session and session['user'] == params['admin_username']):
+        if (request.method == 'POST'):
+            f = request.files['file1']
+            f.save(os.path.join(app.config['UPLOAD_FOLDER'], secure_filename(f.filename)))
+            return "Uploaded Successfully"
+
 
 @app.route("/login", methods = ['GET','POST'])
 def login():
