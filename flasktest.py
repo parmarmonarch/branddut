@@ -79,8 +79,9 @@ def dashboard():
             session['user'] = username
             posts = Posts.query.all()
             return render_template('dashboard.html', params=params, posts = posts)
-        else:
-            return render_template('login.html', params=params)
+        
+    return render_template('login.html', params=params)
+
 
 @app.route("/edit/<string:PID>", methods = ['GET','POST'])
 def edit(PID):
@@ -121,11 +122,22 @@ def uploader():
         if (request.method == 'POST'):
             f = request.files['file1']
             f.save(os.path.join(app.config['UPLOAD_FOLDER'], secure_filename(f.filename)))
-            return "Uploaded Successfully"
+            posts = Posts.query.all()
+            return render_template('dashboard.html', params=params, posts = posts)
+
+@app.route("/delete/<string:PID>", methods = ['GET','POST'])
+def delete(PID):
+    if ('user' in session and session['user'] == params['admin_username']):
+        post = Posts.query.filter_by(PID=PID).first()
+        db.session.delete(post)
+        db.session.commit()
+        return redirect('/dashboard')
+
+@app.route("/logout")
+def logout():
+    session.pop('user')
+    return redirect('/dashboard')
 
 
-@app.route("/login", methods = ['GET','POST'])
-def login():
-    return render_template('login.html', params=params)
 
 app.run(debug=True)

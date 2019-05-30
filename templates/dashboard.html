@@ -23,14 +23,36 @@
         <h1>Basic Actions</h1>
         
         <a href="/edit/0"><button class="btn btn-primary">ADD A NEW POST</button></a>
-        <a href="#"><button class="btn btn-primary">LOGOUT</button></a>
+        <a href="/logout"><button class="btn btn-primary">LOGOUT</button></a>
 
 <hr>
 
       <h1>Upload A File</h1>
         <form action="/uploader" method="post" enctype="multipart/form-data">
           <input type="file" name="file1">
-          <button type="submit" class="btn btn-primary">Submit</button>
+          <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#uploadmodal">
+  SUBMIT
+</button>
+<div class="modal fade" id="uploadmodal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel"></h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <h1>Upload Successful</h1>
+      </div> 
+      <div class="modal-footer">
+        <button type="submit" class="btn btn-primary" id="sendMessageButton">OK</button>
+      
+      </div>
+    </div>
+  </div>
+</div> 
+</form>          
 
 <hr>
       <h1>Edit Posts</h1>
@@ -51,7 +73,7 @@
             <td>{{post.title}}</td>
             <td>{{post.date}}</td>
             <td><a href="/edit/{{post.PID}}"><button class="btn btn-primary float-right">Edit</button></a></td>
-            <td><button class="btn btn-primary float-right">Delete</button></td>
+            <td><a href="/delete/{{post.PID}}"><button class="btn btn-primary float-right">Delete</button></a></td>
           </tr>
           {% endfor %}
         </tbody>
