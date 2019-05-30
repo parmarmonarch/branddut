@@ -10,6 +10,7 @@
 		"ln_url":"https://www.linkedin.com/company/ourstories-media-and-entertainment/?viewAsMember=true",
 		"no_of_posts":3,
 		"admin_username":"BrandDutAdmin",
-		"admin_password":"BrandDut@98"
+		"admin_password":"BrandDut@98",
+		"upload_location":"C:\\Users\\Monarch\\Desktop\\flask\\uploads"
 	}
 }
