@@ -21,6 +21,171 @@
     <div class="row">
       <div class="col-lg-8 col-md-10 mx-auto">
 
+<div class="container">
+    <div class="row">
+<h1> choose city:</h1>
+
+<style class="card-img-top">
+.card-img-top {
+  width: 100%;
+  border-top-left-radius: calc(.25rem - 1px);
+  border-top-right-radius: calc(.25rem - 1px);
+  height: 13vw;
+  object-fit: cover;
+}
+.card-body {
+   /* -ms-flex: 1 1 auto;*/
+    flex: 1 1 auto;
+    padding: 0rem;
+
+}
+</style>
+<!-- Card deck -->
+<div class=" card-columns">
+
+  <!-- Card -->
+  <div class="card mb-4">
+
+    <!--Card image-->
+    <div class="view overlay">
+      <a href="/city/pune"><img class="card-img-top" src="{{ url_for('static', filename='img/pune.jpg') }}"></a>
+      
+        <div class="mask rgba-white-slight"></div>
+      
+    </div>
+
+    <!--Card content-->
+    <div class="card-body">
+
+      <!--Title-->
+      
+      <!--Text-->
+      
+      <!-- Provides extra visual weight and identifies the primary action in a set of buttons -->
+      <a href="/city/pune"><button type="button center" class="btn btn-light-blue btn-md"><h5>Pune</h5></button></a>
+
+    </div>
+
+  </div>
+  <!-- Card -->
+
+  <!-- Card -->
+  <div class="card mb-4">
+
+    <!--Card image-->
+    <div class="view overlay">
+      <a href="/city/delhi"><img class="card-img-top" src="{{ url_for('static', filename='img/delhi.jpg') }}" alt="Card image cap"></a>
+      <a href="/city/delhi">
+        <div class="mask rgba-white-slight"></div>
+      </a>
+    </div>
+
+    <!--Card content-->
+    <div class="card-body">
+
+      <!-- Provides extra visual weight and identifies the primary action in a set of buttons -->
+      <a href="/city/delhi"><button type="button center" class="btn btn-light-blue btn-md"><h5>Delhi</h5></button></a>
+
+    </div>
+
+  </div>
+  <!-- Card -->
+
+  <!-- Card -->
+  <div class="card mb-4">
+
+    <!--Card image-->
+    <div class="view overlay">
+      <a href="/city/banglore"><img class="card-img-top" src="{{ url_for('static', filename='img/banglore.jpg') }}" alt="Card image cap"></a>
+      <a href="/city/banglore">
+        <div class="mask rgba-white-slight"></div>
+      </a>
+    </div>
+
+    <!--Card content-->
+    <div class="card-body">
+
+     
+     
+      <!-- Provides extra visual weight and identifies the primary action in a set of buttons -->
+      <a href="/city/banglore"><button type="button center" class="btn btn-light-blue btn-md"><h5>Banglore</h5></button></a>
+
+    </div>
+
+  </div>
+  <!-- Card -->
+   
+
+  <!-- Card -->
+  <div class="card mb-4">
+
+    <!--Card image-->
+    <div class="view overlay">
+      <a href="/city/mumbai"><img class="card-img-top" src="{{ url_for('static', filename='img/mumbai.jpg') }}" alt="Card image cap"></a>
+      <a href="/city/mumbai">
+        <div class="mask rgba-white-slight"></div>
+      </a>
+    </div>
+
+    <!--Card content-->
+    <div class="card-body">
+
+     
+     
+      <!-- Provides extra visual weight and identifies the primary action in a set of buttons -->
+      <a href="/city/mumbai"><button type="button center" class="btn btn-light-blue btn-md"><h5>Mumbai</h5></button></a>
+
+    </div>
+
+  </div>
+  <!-- Card -->
+
+  <!-- Card -->
+  <div class="card mb-4">
+
+    <!--Card image-->
+    <div class="view overlay">
+      <a href="/city/ahmedabad"><img class="card-img-top" src="{{ url_for('static', filename='img/ahmedabad.jpg') }}" alt="Card image cap"></a>
+      <a href="/city/ahmedabad">
+        <div class="mask rgba-white-slight"></div>
+      </a>
+    </div>
+
+    <!--Card content-->
+    <div class="card-body">
+
+     
+     
+      <!-- Provides extra visual weight and identifies the primary action in a set of buttons -->
+      <a href="/city/ahmedabad"><button type="button center" class="btn btn-light-blue btn-md"><h5>Ahmedabad</h5></button></a>
+
+    </div>
+
+  </div>
+  <!-- Card -->
+  
+
+
+
+
+</div>
+<!-- Card deck -->
+
+</div>
+</div>
+<hr>
+
+
+<h1>Choose Category:</h1>
+<button type="button" class="btn btn-outline-secondary rounded-pill">Category1</button>
+<button type="button" class="btn btn-outline-secondary rounded-pill">Category2</button>
+
+<hr>
+
+
+
+
+
     {% for post in posts %}
     
         <div class="post-preview">

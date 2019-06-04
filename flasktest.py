@@ -37,10 +37,12 @@ class Posts(db.Model):
     slug = db.Column(db.String(25), nullable=False)
     image = db.Column(db.String(25), nullable=True)
     subtitle = db.Column(db.String(80), nullable=True)
+    city = db.Column(db.String(80), nullable=True)
+    category = db.Column(db.String(80), nullable=True)
 
 
 @app.route("/")
-def home():
+def blogs():
     page = request.args.get('page')
     if(not str(page).isnumeric()):
         page = 1
@@ -157,6 +159,11 @@ def delete(PID):
 def logout():
     session.pop('user')
     return redirect('/dashboard')
+
+@app.route("/city/<string:city>", methods = ['GET','POST'])
+def city(city):
+    posts = Posts.query.filter_by(city=city).all()
+    return render_template('city.html', params=params, posts=posts)
 
 
 app.run(debug=True)
