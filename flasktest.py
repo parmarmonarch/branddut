@@ -40,6 +40,11 @@ class Posts(db.Model):
     city = db.Column(db.String(80), nullable=True)
     category = db.Column(db.String(80), nullable=True)
 
+class Featured(db.Model):
+    FID = db.Column(db.Integer, primary_key=True)
+    PID = db.Column(db.Integer, db.ForeignKey('posts.PID'))
+    relation = db.relationship('Posts', backref=db.backref('posts', lazy=True))
+    
 
 @app.route("/")
 def blogs():
@@ -165,5 +170,10 @@ def city(city):
     posts = Posts.query.filter_by(city=city).all()
     return render_template('city.html', params=params, posts=posts)
 
+@app.route("/featured")
+def featured():
+    feat = db.session.query(Featured.PID)
+    posts = db.session.query(Posts).filter(Posts.PID.in_(feat))
+    return render_template('featured.html', params=params, posts=posts, feat=feat)
 
 app.run(debug=True)
