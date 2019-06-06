@@ -57,15 +57,8 @@
           <div class="control-group">
             <div class="form-group floating-label-form-group controls">
               <label>Content2</label>
-              <textarea id="summernote" name="content2"></textarea>
+              <textarea id="summernote" name="content2">{{post.content2|safe}}</textarea>
               <p class="help-block text-danger"></p>
-              <script>
-                $('#summernote').summernote({
-                  placeholder: 'Hello bootstrap 4',
-                  tabsize: 2,
-                  height: 100
-                });
-              </script>
             </div>
           </div>
 
