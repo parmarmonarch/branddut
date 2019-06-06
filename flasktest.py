@@ -33,6 +33,7 @@ class Posts(db.Model):
     PID = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(80), nullable=False)
     content = db.Column(db.String(5000), nullable=False)
+    content2 = db.Column(db.String(5000), nullable=False)
     date = db.Column(db.String(20), nullable=False)
     slug = db.Column(db.String(25), nullable=False)
     image = db.Column(db.String(25), nullable=True)
@@ -117,12 +118,13 @@ def edit(PID):
             title = request.form.get('title')
             subtitle = request.form.get('subtitle')
             content = request.form.get('content')
+            content2 = request.form.get('content2')
             slug = request.form.get('slug')
             image_file = request.form.get('image_file')
             date = datetime.now()
 
             if PID=='0':
-                post = Posts(title=title, subtitle=subtitle, content=content,date=date, slug=slug, image=image_file)
+                post = Posts(title=title, subtitle=subtitle, content=content, content2=content2,date=date, slug=slug, image=image_file)
                 db.session.add(post)
                 db.session.commit() 
                 newpost = Posts.query.filter_by().all()[-1]
@@ -133,6 +135,7 @@ def edit(PID):
                 post.title = title
                 post.subtitle = subtitle
                 post.content = content
+                post.content2 = content2
                 post.date = date
                 post.slug = slug
                 post.image = image_file
@@ -165,10 +168,20 @@ def logout():
     session.pop('user')
     return redirect('/dashboard')
 
-@app.route("/city/<string:city>", methods = ['GET','POST'])
-def city(city):
-    posts = Posts.query.filter_by(city=city).all()
-    return render_template('city.html', params=params, posts=posts)
+@app.route("/city/<string:city>/<int:page_num>", methods = ['GET','POST'])
+def city(city,page_num):
+    posts = Posts.query.filter_by(city=city).paginate(per_page=params['no_of_posts'], page=page_num, error_out=True)
+    spost = Posts.query.filter_by(city=city).first()
+    hn=posts.has_next
+    hp=posts.has_prev
+    nextpg = str(posts.next_num)
+    if hn==False:
+        nextpg = str(page_num) + "#"
+    prev = str(posts.prev_num)
+    if hp==False:
+        prev =  str(page_num) + "#"
+    # posts = Posts.query.filter_by(city=city).all()
+    return render_template('city.html', params=params, posts=posts, spost=spost, nextpg=nextpg, prev=prev)
 
 @app.route("/featured")
 def featured():
