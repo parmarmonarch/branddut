@@ -25,10 +25,11 @@
     <div class="container">
       <div class="row">
         <div class="col-lg-8 col-md-10 mx-auto">
-          {{post.content}} 
+          <a href="/category/{{post.category}}/1"><button type="button" class="btn btn-outline-secondary rounded-pill btn-xs">{{post.category}}</button></a>
+          <hr>
+          {{post.content}}
           <hr>
           {{post.content2|safe}}
-
           
         </div>
       </div>

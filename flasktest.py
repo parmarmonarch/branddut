@@ -194,8 +194,8 @@ def featured():
     posts = db.session.query(Posts).filter(Posts.PID.in_(feat))
     return render_template('featured.html', params=params, posts=posts, feat=feat)
 
-@app.route("/category/<string:category>", methods = ['GET'])
-def category(category):
+@app.route("/category/<string:category>/<int:page_num>", methods = ['GET'])
+def category(category,page_num):
     posts = Posts.query.filter_by(category=category).paginate(per_page=params['no_of_posts'], page=page_num, error_out=True)
     spost = Posts.query.filter_by(category=category).first()
     hn=posts.has_next

@@ -165,7 +165,27 @@
 
   </div>
   <!-- Card -->
-  
+  <!-- Card -->
+  <div class="card mb-4">
+
+    <!--Card image-->
+    <div class="view overlay">
+      <a href="/city/kolkata/1"><img class="card-img-top" src="{{ url_for('static', filename='img/kolkata.jpg') }}" alt="Card image cap"></a>
+      <a href="/city/kolkata/1">
+        <div class="mask rgba-white-slight"></div>
+      </a>
+    </div>
+
+    <!--Card content-->
+    <div class="card-body">
+
+      <!-- Provides extra visual weight and identifies the primary action in a set of buttons -->
+      <a href="/city/kolkata/1"><button type="button center" class="btn btn-light-blue btn-md"><h5>Kolkata</h5></button></a>
+
+    </div>
+
+  </div>
+  <!-- card -->
 
 
 
@@ -198,7 +218,7 @@
     {% for post in posts %}
     
         <div class="post-preview">
-          <a href="/category/{{post.category}}"><button type="button" class="btn btn-outline-secondary rounded-pill btn-xs">{{post.category}}</button></a>
+          <a href="/category/{{post.category}}/1"><button type="button" class="btn btn-outline-secondary rounded-pill btn-xs">{{post.category}}</button></a>
           <a href="/post/{{post.slug}}">
             <h2 class="post-title">
               {{post.title}}
