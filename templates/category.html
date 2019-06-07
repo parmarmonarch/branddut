@@ -17,6 +17,16 @@
   </header>
 
   <!-- Main Content -->
+
+
+
+<div class="scrollmenu">
+  <a href="#about"><button type="button" class="btn btn-outline-secondary rounded-pill">Featured</button></a>
+  <a href="#about"><button type="button" class="btn btn-outline-secondary rounded-pill">Featured</button></a>
+  <a href="#about"><button type="button" class="btn btn-outline-secondary rounded-pill">Featured</button></a>
+  
+</div>
+
   <div class="container">
     <div class="row">
       <div class="col-lg-8 col-md-10 mx-auto">
@@ -24,20 +34,11 @@
 
 
 
-<h1>Choose Category:</h1>
-<button type="button" class="btn btn-outline-secondary rounded-pill">Category1</button>
-<button type="button" class="btn btn-outline-secondary rounded-pill">Category2</button>
-
-<hr>
 
 
-
-
-
-    {% for post in posts %}
+    {% for post in posts.items %}
     
         <div class="post-preview">
-          <a href="/category/{{post.category}}"><button type="button" class="btn btn-outline-secondary rounded-pill btn-xs">{{post.category}}</button></a>
           <a href="/post/{{post.slug}}">
             <h2 class="post-title">
               {{post.title}}
@@ -55,12 +56,17 @@
 
     {% endfor %}
 
+    
         <!-- Pager -->
+    {% set p = '/category/' + spost.category + '/' + prev %}
+    {% set n = '/category/' + spost.category + '/' + nextpg %}
         <div class="clearfix">
-          <a class="btn btn-primary float-left" href="{{prev}}"> &larr; Previous</a>
-          <a class="btn btn-primary float-right" href="{{nextpg}}">Next &rarr;</a>
+          <a class="btn btn-primary float-left" href="{{p}}"> &larr; Previous</a>
+          <a class="btn btn-primary float-right" href="{{n}}">Next &rarr;</a>
         </div>
+
       </div>
     </div>
   </div>
 {% endblock %}
+

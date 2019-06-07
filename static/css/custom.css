@@ -16,3 +16,11 @@ div.scrollmenu a {
 div.scrollmenu a:hover {
   background-color: transparent;
 }
+
+.btn-xs {
+  padding: .75rem .75rem;
+  font-size: .875rem;
+  line-height: .5;
+  border-radius: .2rem;
+  margin-bottom: -1.5rem;
+}

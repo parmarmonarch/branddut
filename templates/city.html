@@ -39,6 +39,7 @@
     {% for post in posts.items %}
     
         <div class="post-preview">
+          <a href="/category/{{post.category}}"><button type="button" class="btn btn-outline-secondary rounded-pill btn-xs">{{post.category}}</button></a>
           <a href="/post/{{post.slug}}">
             <h2 class="post-title">
               {{post.title}}

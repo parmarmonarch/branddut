@@ -58,6 +58,8 @@
             <div class="form-group floating-label-form-group controls">
               <label>Content2</label>
               <textarea id="summernote" name="content2">{{post.content2|safe}}</textarea>
+
+
               <p class="help-block text-danger"></p>
             </div>
           </div>
@@ -73,6 +75,20 @@
             <div class="form-group col-xs-12 floating-label-form-group controls">
               <label>image_file</label>
               <input  class="form-control" placeholder="Image" name="image_file" id="image_file" required data-validation-required-message="Image goes here." value="{{post.image}}">
+              <p class="help-block text-danger"></p>
+            </div>
+          </div>
+          <div class="control-group">
+            <div class="form-group floating-label-form-group controls">
+              <label>City</label>
+              <input type="text" class="form-control" placeholder="City" name="city" id="city" required data-validation-required-message="Please enter the title." value="{{post.city}}" >
+              <p class="help-block text-danger"></p>
+            </div>
+          </div>
+          <div class="control-group">
+            <div class="form-group floating-label-form-group controls">
+              <label>Category</label>
+              <input type="text" class="form-control" placeholder="Category" name="category" id="category" required data-validation-required-message="Please enter the title." value="{{post.category}}" >
               <p class="help-block text-danger"></p>
             </div>
           </div>

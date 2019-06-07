@@ -33,7 +33,7 @@ class Posts(db.Model):
     PID = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(80), nullable=False)
     content = db.Column(db.String(5000), nullable=False)
-    content2 = db.Column(db.String(5000), nullable=False)
+    content2 = db.Column(db.String(100000), nullable=False)
     date = db.Column(db.String(20), nullable=False)
     slug = db.Column(db.String(25), nullable=False)
     image = db.Column(db.String(25), nullable=True)
@@ -122,9 +122,12 @@ def edit(PID):
             slug = request.form.get('slug')
             image_file = request.form.get('image_file')
             date = datetime.now()
+            city = request.form.get('city')
+            category = request.form.get('category')
+
 
             if PID=='0':
-                post = Posts(title=title, subtitle=subtitle, content=content, content2=content2,date=date, slug=slug, image=image_file)
+                post = Posts(title=title, subtitle=subtitle, content=content, content2=content2,date=date, slug=slug, image=image_file, city=city, category=category)
                 db.session.add(post)
                 db.session.commit() 
                 newpost = Posts.query.filter_by().all()[-1]
@@ -139,6 +142,8 @@ def edit(PID):
                 post.date = date
                 post.slug = slug
                 post.image = image_file
+                post.city = city
+                post.category = category
                 db.session.commit()
                 return redirect('/edit/'+PID)
         post = Posts.query.filter_by(PID=PID).first()
@@ -188,5 +193,20 @@ def featured():
     feat = db.session.query(Featured.PID)
     posts = db.session.query(Posts).filter(Posts.PID.in_(feat))
     return render_template('featured.html', params=params, posts=posts, feat=feat)
+
+@app.route("/category/<string:category>", methods = ['GET'])
+def category(category):
+    posts = Posts.query.filter_by(category=category).paginate(per_page=params['no_of_posts'], page=page_num, error_out=True)
+    spost = Posts.query.filter_by(category=category).first()
+    hn=posts.has_next
+    hp=posts.has_prev
+    nextpg = str(posts.next_num)
+    if hn==False:
+        nextpg = str(page_num) + "#"
+    prev = str(posts.prev_num)
+    if hp==False:
+        prev =  str(page_num) + "#"
+    # posts = Posts.query.filter_by(city=city).all()
+    return render_template('category.html', params=params, posts=posts, spost=spost, nextpg=nextpg, prev=prev)
 
 app.run(debug=True)
