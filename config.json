@@ -11,6 +11,8 @@
 		"no_of_posts":2,
 		"admin_username":"BrandDutAdmin",
 		"admin_password":"BrandDut@98",
-		"upload_location":"C:\\Users\\Monarch\\Desktop\\flask\\uploads"
+		"upload_location":"C:\\Users\\Monarch\\Desktop\\flask\\uploads",
+		"gmail_user":"branddut02@gmail.com",
+		"gmail_password": "branddut@2019"
 	}
 }

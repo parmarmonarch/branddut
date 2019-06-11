@@ -2,6 +2,12 @@ from flask import Flask, render_template, request, session, redirect
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
 from werkzeug import secure_filename
+from flask_mail import Mail
+from flask_wtf import FlaskForm
+from flask_bootstrap import Bootstrap
+from wtforms import StringField, PasswordField, BooleanField
+from wtforms.validators import InputRequired, Email, Length
+from flask_login import LoginManager, UserMixin, login_user, logout_user, login_required, current_user
 import os
 import math
 import json
@@ -12,8 +18,17 @@ with open('config.json','r') as c:
 local_server=params['local_server']
 
 app = Flask(__name__)
+# Bootstrap(app)
 app.secret_key = 'super-secret-key'
 app.config['UPLOAD_FOLDER'] = params['upload_location']
+app.config.update(
+    MAIL_SERVER = 'smtp.gmail.com',
+    MAIL_PORT = '465',
+    MAIL_USE_SSL = True,
+    MAIL_USERNAME = params['gmail_user'],
+    MAIL_PASSWORD = params['gmail_password']
+    )
+mail = Mail(app)
 
 if(local_server):
     app.config['SQLALCHEMY_DATABASE_URI'] = params['local_uri']
@@ -21,6 +36,30 @@ else:
     app.config['SQLALCHEMY_DATABASE_URI'] = params['prod_uri']
 
 db = SQLAlchemy(app)
+login_manager = LoginManager(app)
+login_manager.login_view = 'userlogin'
+
+class User(UserMixin,db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String(20), unique=True)
+    email = db.Column(db.String(40), unique=True)
+    password = db.Column(db.String(80))
+
+@login_manager.user_loader
+def load_user(user_id):
+    return User.query.get(int(user_id))
+
+
+class LoginForm(FlaskForm):
+    username = StringField('username', validators=[InputRequired(),Length(min=4, max=20)])
+    password = StringField('password', validators=[InputRequired(),Length(min=8, max=80)])
+    remember = BooleanField('remember_me')
+
+class RegisterForm(FlaskForm):
+    username = StringField('username', validators=[InputRequired(),Length(min=4, max=20)])
+    password = StringField('password', validators=[InputRequired(),Length(min=8, max=80)])
+    email = StringField('email', validators=[InputRequired(),Length(min=8, max=40)])
+
 
 class Contacts(db.Model):
     CID = db.Column(db.Integer, primary_key=True)
@@ -45,6 +84,12 @@ class Featured(db.Model):
     FID = db.Column(db.Integer, primary_key=True)
     PID = db.Column(db.Integer, db.ForeignKey('posts.PID'))
     relation = db.relationship('Posts', backref=db.backref('posts', lazy=True))
+
+class Appointments(db.Model):
+    AID = db.Column(db.Integer, primary_key=True)
+    email_customer = db.Column(db.String(50), nullable=False)
+    email_client = db.Column(db.String(50), nullable=False)
+    date = db.Column(db.String(20), nullable=False)
     
 
 @app.route("/")
@@ -88,10 +133,25 @@ def contact():
 
     return render_template('contact.html', params=params)
 
-@app.route("/post/<string:post_slug>", methods = ['GET'])
+@app.route("/post/<string:post_slug>", methods = ['GET','POST'])
 def post_route(post_slug):
     post = Posts.query.filter_by(slug=post_slug).first()
+    if (request.method == 'POST'):
+        email = request.form.get('email')
+        date = request.form.get('datepicker')
+        entry = Appointments(email_customer=email,email_client='monarchparmar98@gmail.com',date=date)
+        db.session.add(entry)
+        db.session.commit()
+        mail.send_message('New request for appointment from' + email,
+            sender = params['gmail_user'],
+            cc = [email],
+            reply_to = params['gmail_user'],
+            recipients = [params['gmail_user']],
+            body = 'You are requested to schedule an appointment with ' + email + '\n' + 'on ' + date)
+        return render_template('post.html', params=params, post=post)
     return render_template('post.html', params=params, post=post)
+
+
 
 @app.route("/dashboard", methods = ['GET','POST'])
 def dashboard():
@@ -208,5 +268,37 @@ def category(category,page_num):
         prev =  str(page_num) + "#"
     # posts = Posts.query.filter_by(city=city).all()
     return render_template('category.html', params=params, posts=posts, spost=spost, nextpg=nextpg, prev=prev)
+
+
+@app.route("/userlogin", methods=['GET','POST'])
+def userlogin():
+    form = LoginForm()
+
+    if form.validate_on_submit():
+        user = User.query.filter_by(username=form.username.data).first()
+        if user:
+            if user.password == form.password.data:
+                login_user(user, remember = form.remember.data)
+                return 'logged in'
+
+    return render_template('userlogin.html',form=form, params=params)
+
+@app.route("/userregister", methods=['GET','POST'])
+def userregister():
+    form = RegisterForm()
+
+    if form.validate_on_submit():
+        newuser = User(username=form.username.data, email=form.email.data, password=form.password.data)
+        db.session.add(newuser)
+        db.session.commit()
+
+    return render_template('userregister.html',form=form)
+
+@app.route("/userlogout")
+@login_required
+def userlogout():
+    logout_user()
+    return redirect('/')
+
 
 app.run(debug=True)

@@ -26,6 +26,54 @@
       <div class="row">
         <div class="col-lg-8 col-md-10 mx-auto">
           <a href="/category/{{post.category}}/1"><button type="button" class="btn btn-outline-secondary rounded-pill btn-xs">{{post.category}}</button></a>
+          <button type="button" class="btn btn-success rounded-pill btn-xs" data-toggle="modal" data-target="#datepickermodal">Book An Appointment</button>
+          
+
+  <!-- Modal -->
+<div class="modal fade" id="datepickermodal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Book Appointment</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        
+        <form name="appointment" id="appointment" action="#" method="POST" novalidate>
+          
+          <div class="control-group">
+            <div class="form-group floating-label-form-group controls">
+              <label>Email Address</label>
+              <input type="email" class="form-control" placeholder="Email Address" name="email" id="email" required data-validation-required-message="Please enter your email address.">
+              <p class="help-block text-danger"></p>
+            </div>
+          </div>
+
+          <div class="control-group">
+            <div class="form-group floating-label-form-group controls">
+              <label>Date</label>
+              <input data-date-format="dd/mm/yyyy" id="datepicker" name="datepicker" required data-validation-required-message="Please select a date.">
+              <p class="help-block text-danger"></p>
+            </div>
+          </div>
+
+          <br>
+          <div id="success"></div>
+          <div class="form-group">         
+
+          </div>
+        
+      </div> 
+      <div class="modal-footer">
+        <button type="submit" class="btn btn-primary" id="sendMessageButton">OK</button>
+      
+      </div>
+    </div>
+    </form>
+  </div>
+</div>
           <hr>
           {{post.content}}
           <hr>

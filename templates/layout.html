@@ -20,11 +20,14 @@
   
   <!-- CSS for summernote -->
   <link href="//cdnjs.cloudflare.com/ajax/libs/summernote/0.8.12/summernote-bs4.css" rel="stylesheet">
+  <!-- CSS for datepicker -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.7.1/css/bootstrap-datepicker.min.css" rel="stylesheet"/>
 
 
   <!-- Custom styles for this template -->
   <link href="{{ url_for('static', filename='css/clean-blog.min.css') }}" rel="stylesheet">
   <link href="{{ url_for('static', filename='css/custom.css') }}" rel="stylesheet">
+
 
 </head>
 
@@ -55,6 +58,16 @@
           <li class="nav-item">
             <a class="nav-link" href="https://docs.google.com/forms/d/e/1FAIpQLScaJZX7WGjb_3wz97sw0Fj2t6HikT611xLeRZIaVWQlop4hzQ/viewform?usp=sf_link">Add your company</a>
           </li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              Sign UP/ Sign IN
+            </a>
+            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+              <a class="dropdown-item" href="/userregister">Sign UP</a>
+              <a class="dropdown-item" href="/userlogin">Sign IN</a>
+              <a class="dropdown-item" href="/userlogout">Sign OUT</a>
+          </li>
+          
         </ul>
       </div>
     </div>
@@ -115,69 +128,80 @@
   <script src="{{ url_for('static', filename='vendor/jquery/jquery.min.js') }}"></script>
   <script src="{{ url_for('static', filename='vendor/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
 
+
   <!-- Custom scripts for this template -->
   <script src="{{ url_for('static', filename='js/clean-blog.min.js') }}"></script>
   
   <!-- JavaScript for summernote -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js" integrity="sha384-b/U6ypiBEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNmj4" crossorigin="anonymous"></script>
   <script src="//cdnjs.cloudflare.com/ajax/libs/summernote/0.8.12/summernote-bs4.js"></script>
-
-<!-- <script type="text/javascript">
-      $(document).ready(function() {
-  $('#summernote').summernote();
-});
-    </script> -->
-<script>
-$('#summernote').summernote({
-  minHeight: 200,
-  placeholder: 'Write here ...',
-  focus: false,
-  airMode: false,
-  blockquoteBreakingLevel: 2,
-  dialogsInBody: true,
-  dialogsFade: true,
-  disableDragAndDrop: false,
-  toolbar: [
-    // [groupName, [list of button]]
-    ['style', ['bold', 'italic', 'underline', 'clear']],
-    ['para', ['style', 'ul', 'ol', 'paragraph']],
-    ['fontname', ['fontname']],
-    ['color', ['color']],
-    ['fontsize', ['fontsize']],
-    ['font', ['strikethrough', 'superscript', 'subscript']],
-    ['height', ['height']],
-    ['misc', ['undo', 'redo', 'print', 'help', 'fullscreen']],
-    ['picture', ['picture']]
-  ],
-  fontNames: ['Arial', 'Arial Black', 'Comic Sans MS', 'Courier New', 'Merriweather', 'Lora'],
-  fontNamesIgnoreCheck: ['Merriweather','Lora'],
-   callbacks: {
-    onImageUpload: function(files) {
-      // upload image to server and create imgNode...
-      $summernote.summernote('insertNode', imgNode);
-    }
-  },
-  popover: {
-    air: [
+  
+  <script>
+  $('#summernote').summernote({
+    minHeight: 200,
+    placeholder: 'Write here ...',
+    focus: false,
+    airMode: false,
+    blockquoteBreakingLevel: 2,
+    dialogsInBody: true,
+    dialogsFade: true,
+    disableDragAndDrop: false,
+    toolbar: [
+      // [groupName, [list of button]]
+      ['style', ['bold', 'italic', 'underline', 'clear']],
+      ['para', ['style', 'ul', 'ol', 'paragraph']],
+      ['fontname', ['fontname']],
       ['color', ['color']],
-      ['font', ['bold', 'underline', 'clear']]
+      ['fontsize', ['fontsize']],
+      ['font', ['strikethrough', 'superscript', 'subscript']],
+      ['height', ['height']],
+      ['misc', ['undo', 'redo', 'print', 'help', 'fullscreen']],
+      ['picture', ['picture']]
     ],
-  picture: [
+    fontNames: ['Arial', 'Arial Black', 'Comic Sans MS', 'Courier New', 'Merriweather', 'Lora'],
+    fontNamesIgnoreCheck: ['Merriweather','Lora'],
+     callbacks: {
+      onImageUpload: function(files) {
+        // upload image to server and create imgNode...
+        $summernote.summernote('insertNode', imgNode);
+      }
+    },
+    popover: {
+      air: [
+        ['color', ['color']],
+        ['font', ['bold', 'underline', 'clear']]
+      ],
+    picture: [
 
-        // This is a Custom Button in a new Toolbar Area
-        ['custom', ['examplePlugin']],
-        ['imagesize', ['imageSize100', 'imageSize50', 'imageSize25']],
-        ['float', ['floatLeft', 'floatRight', 'floatNone']],
-        ['remove', ['removeMedia']]
-      ]
-  },
-  print: {
-    //'stylesheetUrl': 'url_of_stylesheet_for_printing'
-  }
-});
+          // This is a Custom Button in a new Toolbar Area
+          ['custom', ['examplePlugin']],
+          ['imagesize', ['imageSize100', 'imageSize50', 'imageSize25']],
+          ['float', ['floatLeft', 'floatRight', 'floatNone']],
+          ['remove', ['removeMedia']]
+        ]
+    },
+    print: {
+      //'stylesheetUrl': 'url_of_stylesheet_for_printing'
+    }
+  });
 
+  </script>
 
-</script> 
+  <!-- JavaScript for DatePicker -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.7.1/js/bootstrap-datepicker.min.js"></script>
+
+  <script>
+    $('#datepicker').datepicker({
+          weekStart: 1,
+          daysOfWeekHighlighted: "6,0",
+          autoclose: true,
+          todayHighlight: true,
+          startDate: '+0d',
+          format: "yyyy-mm-dd"
+      });
+      $('#datepicker').datepicker("setDate", new Date());
+  </script>
+
 
 </body>
 
