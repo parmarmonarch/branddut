@@ -1,0 +1,84 @@
+
+{% extends "layout.html" %}
+{% block body %}
+
+  <!-- Page Header -->
+  <header class="masthead" style="background-image: url(' {{ url_for('static', filename='img/about-bg.jpg') }} ')">
+    <div class="overlay"></div>
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-8 col-md-10 mx-auto">
+          <div class="page-heading">
+            <h1>Hello {{user.username}}</h1>
+            <h2>Welcome To User Dashboard</h2>
+            <span class="subheading">Configure Your Profile</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-md-10 mx-auto">
+        {{user.username}}
+        <h1>Change Password:</h1>
+        <p>
+          <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
+            Click Here to Change Password
+          </button>
+        </p>
+        <!-- Message Flashing   -->
+            {% with messages = get_flashed_messages(with_categories=True)%}
+            {% if messages %}
+            {% for category,message in messages %}
+            <div class="alert alert-{{category}} alert-dismissible fade show" role="alert">
+              {{message}}
+              <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            {% endfor %}
+            {% endif %}
+            {% endwith %}
+        <div class="collapse" id="collapseExample">
+          <div class="card card-body">
+            <form class="needs-validation" name="changepassword" id="changepassword" action="#" method="POST" validate>             
+              <div class="control-group">
+                <div class="form-group floating-label-form-group controls">
+                  <label>Current Password</label>
+                  <input type="password" class="form-control" placeholder="current password" name="current_password" id="current_password" required data-validation-required-message="Please enter your current password.">
+                  <p class="help-block text-danger"></p>
+                </div>
+              </div>
+              <div class="control-group">
+                <div class="form-group floating-label-form-group controls">
+                  <label>New Password</label>
+                  <input type="password" class="form-control" placeholder="new password" name="new_password" id="new_password" required data-validation-required-message="Please enter your new password.">
+                  <p class="help-block text-danger"></p>
+                </div>
+              </div>
+              <div class="control-group">
+                <div class="form-group floating-label-form-group controls">
+                  <label>Confirm Password</label>
+                  <input type="password" class="form-control" placeholder="confirm password" name="confirm_password" id="confirm_password" required data-validation-required-message="Please confirm your new password.">
+                  <p class="help-block text-danger"></p>
+                </div>
+              </div>
+              
+              <br>
+              <div id="success"></div>
+              <div class="form-group">
+                <button type="submit" class="btn btn-primary" id="sendMessageButton">Send</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr>
+
+{% endblock %}

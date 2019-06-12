@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, session, redirect
+from flask import Flask, render_template, request, session, redirect, flash
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
 from werkzeug import secure_filename
@@ -79,6 +79,8 @@ class Posts(db.Model):
     subtitle = db.Column(db.String(80), nullable=True)
     city = db.Column(db.String(80), nullable=True)
     category = db.Column(db.String(80), nullable=True)
+    id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    relation = db.relationship('User', backref=db.backref('user', lazy=True))
 
 class Featured(db.Model):
     FID = db.Column(db.Integer, primary_key=True)
@@ -130,23 +132,25 @@ def contact():
         entry = Contacts(name=name, phone_num=phone, email=email, message=message)
         db.session.add(entry)
         db.session.commit()
+        flash('Your response has been recorded','success')
 
     return render_template('contact.html', params=params)
 
 @app.route("/post/<string:post_slug>", methods = ['GET','POST'])
 def post_route(post_slug):
     post = Posts.query.filter_by(slug=post_slug).first()
+    user = User.query.filter_by(id=post.id).first()
     if (request.method == 'POST'):
         email = request.form.get('email')
         date = request.form.get('datepicker')
-        entry = Appointments(email_customer=email,email_client='monarchparmar98@gmail.com',date=date)
+        entry = Appointments(email_customer=email,email_client=user.email,date=date)
         db.session.add(entry)
         db.session.commit()
+        flash('Your request has been successfully recorded','success')
         mail.send_message('New request for appointment from' + email,
             sender = params['gmail_user'],
             cc = [email],
-            reply_to = params['gmail_user'],
-            recipients = [params['gmail_user']],
+            recipients = [user.email],
             body = 'You are requested to schedule an appointment with ' + email + '\n' + 'on ' + date)
         return render_template('post.html', params=params, post=post)
     return render_template('post.html', params=params, post=post)
@@ -184,10 +188,11 @@ def edit(PID):
             date = datetime.now()
             city = request.form.get('city')
             category = request.form.get('category')
+            id = request.form.get('id')
 
 
             if PID=='0':
-                post = Posts(title=title, subtitle=subtitle, content=content, content2=content2,date=date, slug=slug, image=image_file, city=city, category=category)
+                post = Posts(title=title, subtitle=subtitle, content=content, content2=content2,date=date, slug=slug, image=image_file, city=city, category=category, id=id)
                 db.session.add(post)
                 db.session.commit() 
                 newpost = Posts.query.filter_by().all()[-1]
@@ -204,6 +209,7 @@ def edit(PID):
                 post.image = image_file
                 post.city = city
                 post.category = category
+                post.id = id
                 db.session.commit()
                 return redirect('/edit/'+PID)
         post = Posts.query.filter_by(PID=PID).first()
@@ -280,6 +286,9 @@ def userlogin():
             if user.password == form.password.data:
                 login_user(user, remember = form.remember.data)
                 return 'logged in'
+            flash('The password you entered is invalid!', 'danger')
+        if not user:
+            flash('The Username is invalid!', 'danger')
 
     return render_template('userlogin.html',form=form, params=params)
 
@@ -291,6 +300,7 @@ def userregister():
         newuser = User(username=form.username.data, email=form.email.data, password=form.password.data)
         db.session.add(newuser)
         db.session.commit()
+        flash('You have been registered successfully','success')
 
     return render_template('userregister.html',form=form)
 
@@ -299,6 +309,22 @@ def userregister():
 def userlogout():
     logout_user()
     return redirect('/')
+
+@app.route("/userdashboard", methods=['GET','POST'])
+@login_required
+def userdashboard():
+    user = User.query.filter_by(id=current_user.id).first()
+    if (request.method == 'POST'):
+        if request.form.get('current_password')!=user.password:
+            flash('You entered a wrong current password','danger')
+        if request.form.get('current_password')==user.password:
+            if request.form.get('confirm_password')==request.form.get('new_password') and len(request.form.get('new_password'))>7:
+                user.password = request.form.get('new_password')
+                db.session.commit()
+                flash('password changed successfully','success')
+            else:
+                flash('password mismatch or less than 8 characters. Please retry','danger')
+    return render_template('userdashboard.html',params=params, user=user)
 
 
 app.run(debug=True)
