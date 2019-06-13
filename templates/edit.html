@@ -22,7 +22,6 @@
     <div class="row">
       <div class="col-lg-8 col-md-10 mx-auto">
         <h1>Basic Actions</h1>
-        
         <a href="/dashboard"><button class="btn btn-primary">ADMIN PANEL HOME</button></a>
         <a href="/logout"><button class="btn btn-primary">LOGOUT</button></a>
 <hr>
@@ -92,11 +91,21 @@
               <p class="help-block text-danger"></p>
             </div>
           </div>
-          <div class="control-group">
+          <!-- <div class="control-group">
             <div class="form-group floating-label-form-group controls">
               <label>User id</label>
               <input type="text" class="form-control" placeholder="User id" name="id" id="id" required data-validation-required-message="Please enter the user id." value="{{post.id}}" >
               <p class="help-block text-danger"></p>
+            </div>
+          </div> -->
+          <div class="control-group">
+            <div class="form-group">
+                <label for="sel1">Select User:</label>
+                <select class="form-control" name='id' id="id">
+                  {% for user in users %}
+                  <option value={{user.id}}> {{user.id}} - {{user.username}}</option>
+                  {% endfor %}
+                </select>
             </div>
           </div>
 
@@ -133,6 +142,7 @@
     </div>
   </div>
 
-  <hr>
+  
 
- {% endblock %}
+ {% endblock %}}
+

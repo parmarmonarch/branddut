@@ -80,12 +80,12 @@ class Posts(db.Model):
     city = db.Column(db.String(80), nullable=True)
     category = db.Column(db.String(80), nullable=True)
     id = db.Column(db.Integer, db.ForeignKey('user.id'))
-    relation = db.relationship('User', backref=db.backref('user', lazy=True))
+    relation = db.relationship('User', cascade="save-update, merge, delete")
 
 class Featured(db.Model):
     FID = db.Column(db.Integer, primary_key=True)
-    PID = db.Column(db.Integer, db.ForeignKey('posts.PID'))
-    relation = db.relationship('Posts', backref=db.backref('posts', lazy=True))
+    PID = db.Column(db.Integer, db.ForeignKey('posts.PID'), unique=True)
+    relation = db.relationship('Posts', cascade="save-update, merge, delete")
 
 class Appointments(db.Model):
     AID = db.Column(db.Integer, primary_key=True)
@@ -177,6 +177,7 @@ def dashboard():
 
 @app.route("/edit/<string:PID>", methods = ['GET','POST'])
 def edit(PID):
+    users = User.query.filter_by().all()
     if ('user' in session and session['user'] == params['admin_username']):
         if (request.method == 'POST'):
             title = request.form.get('title')
@@ -213,7 +214,7 @@ def edit(PID):
                 db.session.commit()
                 return redirect('/edit/'+PID)
         post = Posts.query.filter_by(PID=PID).first()
-        return render_template('edit.html', params=params,PID=PID, post=post)
+        return render_template('edit.html', params=params,PID=PID, post=post, users=users)
 
 
 
@@ -285,7 +286,7 @@ def userlogin():
         if user:
             if user.password == form.password.data:
                 login_user(user, remember = form.remember.data)
-                return 'logged in'
+                return render_template('userdashboard.html', user=user, form=form, params=params)
             flash('The password you entered is invalid!', 'danger')
         if not user:
             flash('The Username is invalid!', 'danger')
@@ -325,6 +326,27 @@ def userdashboard():
             else:
                 flash('password mismatch or less than 8 characters. Please retry','danger')
     return render_template('userdashboard.html',params=params, user=user)
+
+@app.route("/featuredadmin", methods = ['GET','POST'])
+def featuredadmin():
+    feat = db.session.query(Featured.PID)
+    posts = db.session.query(Posts).filter(Posts.PID.in_(feat))
+    addposts = Posts.query.filter(Posts.PID.notin_(feat)).all()
+    if (request.method == 'POST'):
+        pid = request.form.get('fid')
+        entry = Featured(PID=pid)
+        db.session.add(entry)
+        db.session.commit()
+        flash('post added to featured posts successfully','success')
+    return render_template('featuredadmin.html', params=params, feat=feat, posts=posts, addposts=addposts)
+
+@app.route("/deletefeatured/<string:PID>", methods = ['GET','POST'])
+def deletefeatured(PID):
+    if ('user' in session and session['user'] == params['admin_username']):
+        feat = Featured.query.filter_by(PID=PID).first()
+        db.session.delete(feat)
+        db.session.commit()
+        return redirect('/featuredadmin')
 
 
 app.run(debug=True)
