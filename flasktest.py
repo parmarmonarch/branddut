@@ -44,6 +44,8 @@ class User(UserMixin,db.Model):
     username = db.Column(db.String(20), unique=True)
     email = db.Column(db.String(40), unique=True)
     password = db.Column(db.String(80))
+    relation_posts = db.relationship('Posts', cascade="save-update, merge, delete", lazy=True)
+    relation_appointments = db.relationship('Appointments', cascade="save-update, merge, delete", lazy=True)
 
 @login_manager.user_loader
 def load_user(user_id):
@@ -80,18 +82,19 @@ class Posts(db.Model):
     city = db.Column(db.String(80), nullable=True)
     category = db.Column(db.String(80), nullable=True)
     id = db.Column(db.Integer, db.ForeignKey('user.id'))
-    relation = db.relationship('User', cascade="save-update, merge, delete")
+    relation_featured = db.relationship('Featured', cascade="save-update, merge, delete", lazy=True)
 
 class Featured(db.Model):
     FID = db.Column(db.Integer, primary_key=True)
     PID = db.Column(db.Integer, db.ForeignKey('posts.PID'), unique=True)
-    relation = db.relationship('Posts', cascade="save-update, merge, delete")
+    
 
 class Appointments(db.Model):
     AID = db.Column(db.Integer, primary_key=True)
     email_customer = db.Column(db.String(50), nullable=False)
     email_client = db.Column(db.String(50), nullable=False)
     date = db.Column(db.String(20), nullable=False)
+    id = db.Column(db.Integer, db.ForeignKey('user.id'))
     
 
 @app.route("/")
@@ -159,9 +162,10 @@ def post_route(post_slug):
 
 @app.route("/dashboard", methods = ['GET','POST'])
 def dashboard():
+    users = User.query.all()
     if ('user' in session and session['user'] == params['admin_username']):
         posts = Posts.query.all()
-        return render_template('dashboard.html', params=params, posts = posts)
+        return render_template('dashboard.html', params=params, posts = posts, users=users)
 
     if (request.method=='POST'):
         username = request.form.get('uname')
@@ -172,7 +176,7 @@ def dashboard():
             posts = Posts.query.all()
             return render_template('dashboard.html', params=params, posts = posts)
         
-    return render_template('login.html', params=params)
+    return render_template('login.html', params=params, users=users)
 
 
 @app.route("/edit/<string:PID>", methods = ['GET','POST'])
@@ -286,7 +290,7 @@ def userlogin():
         if user:
             if user.password == form.password.data:
                 login_user(user, remember = form.remember.data)
-                return render_template('userdashboard.html', user=user, form=form, params=params)
+                return redirect('/userdashboard')
             flash('The password you entered is invalid!', 'danger')
         if not user:
             flash('The Username is invalid!', 'danger')
@@ -315,6 +319,7 @@ def userlogout():
 @login_required
 def userdashboard():
     user = User.query.filter_by(id=current_user.id).first()
+    appointments = Appointments.query.filter(Appointments.id==user.id).all()
     if (request.method == 'POST'):
         if request.form.get('current_password')!=user.password:
             flash('You entered a wrong current password','danger')
@@ -325,7 +330,10 @@ def userdashboard():
                 flash('password changed successfully','success')
             else:
                 flash('password mismatch or less than 8 characters. Please retry','danger')
-    return render_template('userdashboard.html',params=params, user=user)
+        if request.form.get('delpassword')==user.password:
+            return redirect('/deleteuser/'+str(user.id))
+
+    return render_template('userdashboard.html',params=params, user=user, appointments=appointments)
 
 @app.route("/featuredadmin", methods = ['GET','POST'])
 def featuredadmin():
@@ -348,5 +356,20 @@ def deletefeatured(PID):
         db.session.commit()
         return redirect('/featuredadmin')
 
+@app.route("/deleteuser/<int:id>", methods = ['GET','POST'])
+def deleteuser(id):
+    if ('user' in session and session['user'] == params['admin_username']):
+        del_user = User.query.filter_by(id=id).first()
+        db.session.delete(del_user)
+        db.session.commit()
+        return redirect('/')
+
+@app.route("/deleteappointment/<int:AID>", methods = ['GET','POST'])
+@login_required
+def deleteappointment(AID):
+    del_appointment = Appointments.query.filter_by(AID=AID).first()
+    db.session.delete(del_appointment)
+    db.session.commit()
+    return redirect('/userdashboard')
 
 app.run(debug=True)

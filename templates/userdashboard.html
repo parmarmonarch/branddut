@@ -42,6 +42,7 @@
             {% endif %}
             {% endwith %}
         <div class="collapse" id="collapseExample">
+          <br>
           <div class="card card-body">
             <form class="needs-validation" name="changepassword" id="changepassword" action="#" method="POST" validate>             
               <div class="control-group">
@@ -74,6 +75,58 @@
             </form>
           </div>
         </div>
+
+        <h1>Account:</h1>
+        <p>
+          <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#collapsedelaccount" aria-expanded="false" aria-controls="collapseExample">
+            Delete Account
+          </button>
+        </p>
+        <div class="collapse" id="collapsedelaccount">
+          <br>
+          <div class="card card-body">
+            <form class="needs-validation" name="delaccount" id="changepassword" action="#" method="POST" validate>             
+              <div class="control-group">
+                <div class="form-group floating-label-form-group controls">
+                  <label>Current Password</label>
+                  <input type="password" class="form-control" placeholder="current password" name="delpassword" id="delpassword" required data-validation-required-message="Please enter your current password.">
+                  <p class="help-block text-danger"></p>
+                </div>
+              </div>
+              
+              
+              <br>
+              <div id="success"></div>
+              <div class="form-group">
+                <button type="submit" class="btn btn-primary" id="sendMessageButton">Confirm Deletion</button>
+              </div>
+            </form>
+          </div>
+        </div>
+
+
+        
+        <br>
+        <h1>Your Appointments:</h1>
+        <table class="table table-striped table-hover table-sm">
+        <thead class="thead-dark">
+          <tr>
+            <th>Customer Email-ID</th>
+            <th>Date</th>
+            <th>DELETE</th>     
+          </tr>
+        </thead>
+        <tbody>
+          {% for appointment in appointments %}
+          <tr>
+            <td>{{appointment.email_customer}}</td>
+            <td>{{appointment.date}}</td>
+            <td><a href="/deleteappointment/{{appointment.AID}}"><button class="btn btn-primary">Delete</button></a></td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+
       </div>
     </div>
   </div>
